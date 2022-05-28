@@ -3,12 +3,14 @@ import * as React from "react";
 import { Container } from "./app.styles";
 
 // components
-import Index from "./components/not_typescript/useReducer/codingAddict";
+// import Index from "./components/not_typescript/useReducer/codingAddict";
+import TodoApp from "./components/not_typescript/useReducer/Fernando/todoApp";
 
 const App: React.FC = () => {
   return (
     <Container>
-      <Index />
+      {/* <Index /> */}
+      <TodoApp />
     </Container>
   );
 };

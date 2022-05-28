@@ -4,9 +4,6 @@ import { useState, useReducer } from "react";
 // components
 import Modal from "./modal";
 
-// data
-import { data } from "./data";
-
 const reducer = (state, action) => {
   if (action.type === "ADD_ITEM") {
     const newPeople = [...state.people, action.payload];
@@ -24,11 +21,20 @@ const reducer = (state, action) => {
       modalContent: "please enter a value",
     };
   }
+  if (action.type === "CLOSE_MODAL") {
+    return { ...state, isModalOpen: false };
+  }
+  if (action.type === "REMOVE_ITEM") {
+    const newPeople = state.people.filter(
+      (person) => person.id !== action.payload
+    );
+    return { ...state, people: newPeople };
+  }
   throw new Error("no matching action type");
 };
 
 const defaultState = {
-  people: data,
+  people: [],
   isModalOpen: true,
   modalContent: "",
 };
@@ -37,8 +43,8 @@ const Index = () => {
   const [name, setName] = useState("");
   const [state, dispatch] = useReducer(reducer, defaultState);
 
-  const handleChange = (event) => {
-    setName(event.target.value);
+  const handleChange = (e) => {
+    setName(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -52,10 +58,16 @@ const Index = () => {
     }
   };
 
+  const closeModal = () => {
+    dispatch({ type: "CLOSE_MODAL" });
+  };
+
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {state.isModalOpen && <Modal modalContent={state.modalContent} />}
+        {state.isModalOpen && (
+          <Modal closeModal={closeModal} modalContent={state.modalContent} />
+        )}
         <form onSubmit={handleSubmit}>
           <div>
             <input
@@ -64,15 +76,13 @@ const Index = () => {
               onChange={handleChange}
               style={{ border: "none", background: "#fff", color: "#000" }}
             />
-          </div>
-          <div style={{ marginTop: "1rem" }}>
             <button
               type="submit"
               style={{
                 border: "none",
                 background: "#fff",
                 color: "#000",
-                padding: ".3rem",
+                marginLeft: "1rem",
               }}
             >
               ADD
@@ -82,8 +92,18 @@ const Index = () => {
         <div style={{ marginTop: "1rem" }}>
           {state.people.map((person) => {
             return (
-              <div key={person.id}>
+              <div
+                key={person.id}
+                style={{ display: "flex", marginBottom: "1rem" }}
+              >
                 <h4>{person.name}</h4>
+                <button
+                  onClick={() => {
+                    dispatch({ type: "REMOVE_ITEM", payload: person.id });
+                  }}
+                >
+                  remove
+                </button>
               </div>
             );
           })}

@@ -1,8 +1,16 @@
 import * as React from "react";
-import { SBox } from "./app.styles";
+// styles
+import { Container } from "./app.styles";
+
+// components
+import Index from "./components/not_typescript/useReducer/codingAddict";
 
 const App: React.FC = () => {
-  return <SBox component={"h1"}>Hello World</SBox>;
+  return (
+    <Container>
+      <Index />
+    </Container>
+  );
 };
 
 export default App;
